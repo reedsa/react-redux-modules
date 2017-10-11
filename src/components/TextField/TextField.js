@@ -2,7 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Control } from 'react-redux-form';
 
-const TextField = ({ id, label, textFieldComponent, validators }) => {
+const TextField = ({
+  model,
+  id,
+  label,
+  type,
+  textFieldComponent,
+  validators,
+}) => {
   let labelEl;
   let controlProps;
   if (textFieldComponent) {
@@ -16,6 +23,7 @@ const TextField = ({ id, label, textFieldComponent, validators }) => {
       {labelEl}
       <Control.text
         model={model}
+        type={type}
         component={textFieldComponent}
         controlProps={controlProps}
         validators={validators}
@@ -25,9 +33,11 @@ const TextField = ({ id, label, textFieldComponent, validators }) => {
 };
 
 TextField.propTypes = {
+  model: PropTypes.string.isRequired,
   id: PropTypes.string,
-  label: PropTypes.string,
-  textFieldComponent: PropTypes.element,
+  label: PropTypes.string.isRequired,
+  textFieldComponent: PropTypes.func,
+  type: PropTypes.string,
   validators: PropTypes.object,
 };
 

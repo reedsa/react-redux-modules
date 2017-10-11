@@ -36,7 +36,7 @@ const SubmitButton = ({
 
 SubmitButton.propTypes = {
   buttonClassName: PropTypes.string,
-  buttonComponent: PropTypes.element,
+  buttonComponent: PropTypes.func,
   buttonProps: PropTypes.object,
   children: PropTypes.string,
   disabled: PropTypes.bool,

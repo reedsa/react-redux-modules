@@ -8,12 +8,14 @@ import Login from '../../services/Login';
 
 class LoginForm extends Component {
   handleSubmit(credentials) {
-    this.props.dispatch(actions.submit('login', this.login(credentials)));
+    this.props.dispatch(
+      actions.submit(this.props.model, this.login(credentials))
+    );
   }
 
   login(credentials) {
     return new Promise((resolve, reject) => {
-      Login.authenticate(this.props.apiUrl, credentials.login)
+      Login.authenticate(this.props.apiUrl, credentials[this.props.model])
         .then(user => {
           this.props.dispatch(this.props.loginSuccessAction(user));
           resolve(user);
@@ -26,21 +28,24 @@ class LoginForm extends Component {
 
   render() {
     const submitDisabled =
-      !this.props.forms.login.username.valid ||
-      !this.props.forms.login.password.valid;
+      !this.props.forms[this.props.model].username.valid ||
+      !this.props.forms[this.props.model].password.valid;
+
+    const TextFieldComponent = this.props.textFieldComponent;
+    const ButtonComponent = this.props.buttonComponent;
 
     return (
       <Form
-        model="login"
+        model={this.props.model}
         onSubmit={credentials => this.handleSubmit(credentials)}
       >
-        <Errors style={{ color: 'red' }} model="login" />
+        <Errors style={{ color: 'red' }} model={this.props.model} />
 
         <TextField
           id="username"
           label="Username"
-          model="login.login.username"
-          textFieldComponent={this.props.textFieldComponent}
+          model={`.${this.props.model}.username`}
+          textFieldComponent={TextFieldComponent}
           validators={{
             required: val => val && val.length >= 3,
           }}
@@ -49,8 +54,9 @@ class LoginForm extends Component {
         <TextField
           id="password"
           label="Password"
-          model="login.login.password"
-          textFieldComponent={this.props.textFieldComponent}
+          type="password"
+          model={`.${this.props.model}.password`}
+          textFieldComponent={TextFieldComponent}
           validators={{
             required: val => val && val.length >= 6,
           }}
@@ -58,7 +64,7 @@ class LoginForm extends Component {
 
         <SubmitButton
           buttonClassName={this.props.buttonClassName}
-          buttonComponent={this.props.buttonComponent}
+          buttonComponent={ButtonComponent}
           buttonProps={this.props.buttonProps}
           disabled={submitDisabled}
         >
@@ -73,12 +79,13 @@ LoginForm.propTypes = {
   apiUrl: PropTypes.string.isRequired,
   forms: PropTypes.object,
   loginSuccessAction: PropTypes.func.isRequired,
-  TextFieldComponent: PropTypes.element,
-  ButtonComponent: PropTypes.element,
+  textFieldComponent: PropTypes.func,
+  buttonComponent: PropTypes.func,
+  model: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  forms: state.login.forms,
+const mapStateToProps = (state, props) => ({
+  forms: state[props.model].forms,
 });
 
 export default connect(mapStateToProps)(LoginForm);

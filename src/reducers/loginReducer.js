@@ -5,11 +5,13 @@ const initialLoginState = {
   password: '',
 };
 
-const loginReducer = combineForms(
-  {
-    login: initialLoginState,
-  },
-  'login'
-);
+const loginReducer = rootName => ({
+  [rootName]: combineForms(
+    {
+      [rootName]: initialLoginState,
+    },
+    rootName
+  ),
+});
 
 export { loginReducer };
