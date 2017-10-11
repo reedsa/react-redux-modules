@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "description": "React Component Modules that integrate with your Redux store",
   "main": "dist/index.js",
+  "files": ["lib/", "dist/", "src/"],
   "scripts": {
     "build": "yarn scripts && yarn build:umd",
     "build:umd": "webpack",
